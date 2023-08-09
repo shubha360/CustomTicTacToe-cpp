@@ -7,9 +7,11 @@ using namespace std;
 
 class Player {
 public:
+    Player();
     Player(string name, char sign);
-    string getName();
-    char getSign();
+
+    string getName() { return _name; }
+    char getSign() { return _sign; }
 
 private:
     string _name;

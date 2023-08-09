@@ -1,11 +1,14 @@
 #include <iostream>
+#include <string>
 
-#include "Board.h"
+#include "include/Board.h"
+#include "include/GameManager.h"
 
 using namespace std;
 
 int main() {
-    Board b(5, 9);
-    b.printBoard();
+    GameManager manager;
+    manager.init();
+
     return 0;
 }

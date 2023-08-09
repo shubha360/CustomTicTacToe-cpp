@@ -1,36 +1,23 @@
-#include "Board.h"
+#include "../include/Board.h"
 
-#include <iostream>
-#include <sstream>
+Board::Board() {
+    _rows = _colummns = -1;
+}
 
 Board::Board(int rows, int colummns) {
     _rows = rows;
     _colummns = colummns;
-    _board = new char*[rows];
-    _rowDivider << "    ---";
-    _firstLine << "\n      |";
+    _rowDivider << "    ----";
+    _firstLine << "\n       |";
 
     for (int i = 0; i < rows; i++) {
-        _board[i] = new char[colummns];
-
-        for (int j = 0; j < colummns; j++) {
-            _board[i][j] = ' ';
-
-            if (i == 0) {
-                _rowDivider << "----";
-                _firstLine << " " << j + 1 << " |";
-            }
-        }
+        _board.push_back(string(colummns, ' '));
     }
-}
 
-Board::~Board() {
-    for (int i = 0; i < _rows; i++) {
-        delete[] _board[i];
-        _board[i] = NULL;
+    for (int i = 0; i < colummns; i++) {
+        _rowDivider << "-----";
+        _firstLine << " " << i + 1 << " |";
     }
-    delete[] _board;
-    _board = NULL;
 }
 
 void Board::printBoard() {
@@ -52,16 +39,4 @@ void Board::printBoard() {
         }
         cout << _rowDivider.str() << endl;
     }
-}
-
-int Board::getRows() {
-    return _rows;
-}
-
-int Board::getColummns() {
-    return _colummns;
-}
-
-char** Board::getBoard() {
-    return _board;
 }

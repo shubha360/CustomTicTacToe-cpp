@@ -2,23 +2,24 @@
 #define BOARD_H
 
 #include <sstream>
+#include <vector>
+#include <iostream>
 
 using namespace std;
 
 class Board {
 public:
+    Board();
     Board(int rows, int colummns);
-    ~Board();
-
     void printBoard();
 
-    int getRows();
-    int getColummns();
-    char** getBoard();
+    int getRows() { return _rows; }
+    int getColummns() { return _colummns; }
+    vector<string> getBoard() { return _board; }
 
 private:
     int _rows, _colummns;
-    char** _board;
+    vector<string> _board;
     stringstream _firstLine, _rowDivider;
 };
 
