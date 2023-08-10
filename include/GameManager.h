@@ -1,9 +1,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
-#include <vector>
 #include <conio.h>
-#include <string>
 
 #include "Board.h"
 #include "Player.h"
@@ -19,7 +17,9 @@ private:
     vector<Player> _players;
     int _playerCount;
 
-    void reportBadInput();
+    void _reportBadInput();
+    bool _nameAvailable(string name, int index); // checks if the name is already taken
+    bool _signAvailable(char sign, int index); // checks if the sign is already taken
 };
 
 #endif // GAMEMANAGER_H

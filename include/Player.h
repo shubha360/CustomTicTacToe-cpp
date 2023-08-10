@@ -7,6 +7,9 @@ using namespace std;
 
 class Player {
 public:
+    static const string DEFAULT_PLAYER_NAME;
+    static const char DEFAULT_PLAYER_SIGN;
+
     Player();
     Player(string name, char sign);
 

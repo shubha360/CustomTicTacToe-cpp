@@ -7,75 +7,106 @@ GameManager::GameManager() {
 void GameManager::init() {
     cout << "Welcome to Custom Tic Tac Toe!\n\n";
 
+    // Taking the number of players
     do {
-        cout << "How many player? <2-4>: ";
+        cout << "How many player? <" << Board::MINIMUM_PLAYERS << "-" << Board::MAXIMUM_PLAYERS << ">: ";
         _playerCount = _getch() - 48;
-        cout << _playerCount;
+        cout << _playerCount << endl;
 
-        if (_playerCount < 2 || _playerCount > 4) {
-            reportBadInput();
+        if (_playerCount < Board::MINIMUM_PLAYERS || _playerCount > Board::MAXIMUM_PLAYERS) {
+            _reportBadInput();
         }
         else {
-            cout << endl;
             break;
         }
     } while (true);
 
+    // Taking name and sign of every player
     for (int i = 0; i < _playerCount; i++) {
 
-        cout << endl << "Enter name for player " << (i + 1) << ": ";
         string name;
-        getline(cin , name);
+        char sign;
 
-        cout << "Hello " << name << "! What sign would you like to play with? ";
-        char sign = _getch();
-        cout << sign;
+        // Name
+        do {
+            cout << endl << "Enter name for player " << (i + 1) << ": ";
+            getline(cin , name);
+
+            if (name == Player::DEFAULT_PLAYER_NAME) {
+                cout << "Can't take empty name!\n\n";
+            }
+            else if (!_nameAvailable(name, i)) {
+                cout << "Name already taken!\n\n";
+            }
+            else {
+                break;
+            }
+
+        } while (true);
+
+        // Sign
+        do {
+            cout << "Hello " << name << "! What sign would you like to play with? ";
+            sign = _getch();
+            cout << sign << endl;
+
+            if (sign == Player::DEFAULT_PLAYER_SIGN || sign < 33 || sign > 126) {
+                cout << "Please choose another sign!\n\n";
+            }
+            else if (!_signAvailable(sign, i)) {
+                cout << "Sign already taken!\n\n";
+            }
+            else {
+                break;
+            }
+        } while(true);
 
         _players.push_back(Player(name, sign));
-        cout << endl;
     }
 
     int width, height;
-    do {
-        cout << endl << "Enter the width of the board <1 - 9>: ";
-        width = _getch() - 48;
-        cout << width;
 
-        if (width < 1 || width > 9) {
-            reportBadInput();
+    // width of the board
+    do {
+        cout << endl << "Enter the width of the board <" << Board::MINIMUM_ROW_COLUMN << "-" << Board::MAXIMUM_ROW_COLUMN << ">: ";
+        width = _getch() - 48;
+        cout << width << endl;
+
+        if (width < Board::MINIMUM_ROW_COLUMN || width > Board::MAXIMUM_ROW_COLUMN) {
+            _reportBadInput();
         }
         else {
-            cout << endl;
             break;
         }
     } while (true);
 
+    // height of the board
     do {
-        cout << "Enter the height of the board <1 - 9>: ";
+        cout << endl << "Enter the height of the board <" << Board::MINIMUM_ROW_COLUMN << "-" << Board::MAXIMUM_ROW_COLUMN << ">: ";
         height = _getch() - 48;
-        cout << height;
+        cout << height << endl;
 
-        if (height < 1 || height > 9) {
-            reportBadInput();
+        if (height < Board::MINIMUM_ROW_COLUMN || height > Board::MAXIMUM_ROW_COLUMN) {
+            _reportBadInput();
         }
         else {
-            cout << endl;
             break;
         }
     } while (true);
 
     int winMarker;
 
+    // total number of desired markers for winning
     do {
-        cout << endl << "How many markers horizontal, vertical, diagonal needed to win? <3 - 9>: ";
+        cout << endl << "How many markers horizontal, vertical, diagonal needed to win? <" << Board::MINIMUM_WIN_MARKERS << "-" << Board::MAXIMUM_WIN_MARKERS << ">: ";
         winMarker = _getch() - 48;
-        cout << winMarker;
+        cout << winMarker << endl;
 
         if (winMarker < 3 || winMarker > 9) {
-            reportBadInput();
+            _reportBadInput();
         }
         else {
-            cout << endl << endl;
+            cout << endl;
             break;
         }
     } while (true);
@@ -88,44 +119,60 @@ void GameManager::play() {
     _board.printBoard();
 
     int turn = 0;
+    int totalTurns = _board.getRows() * _board.getColumns();
 
-    for (int turn = 0; turn < _board.getRows() * _board.getColumns(); turn++) {
+    bool isTied = true; // used at the end of the main loop to determine if match was tied
+
+    for (int turn = 0; turn < totalTurns; turn++) {
 
         cout << endl;
-        
+
+        /*
+        Example: among 3 players -
+        turn 0 % 3 = 0,
+        turn 1 % 3 = 1,
+        turn 2 % 3 = 2,
+
+        turn 3 % 3 = 0,
+        turn 4 % 3 = 1,
+        turn 5 % 3 = 2,
+
+        the loop gos on...
+        */
         Player currentPlayer = _players[turn % _playerCount];
 
-        cout << currentPlayer.getName() << "'s turn!\n\n";        
+        cout << currentPlayer.getName() << "'s turn!\n\n";
 
         int posX, posY;
 
+        // loop until an empty cell is seleted
         do {
+            // taking x coordinate
             do {
                 cout << "Enter X coordinate. " << "<1-" << _board.getColumns() << ">: ";
                 posX = _getch() - 48;
-                cout << posX;
+                cout << posX << endl;
 
                 if (posX < 1 || posX > _board.getColumns()) {
-                    reportBadInput();
+                    _reportBadInput();
                 }
                 else {
-                    posX--;
-                    cout << endl;
+                    posX--; // board index starts at 0
                     break;
                 }
             } while (true);
 
+            // taking y coordinate
             do {
                 cout << "Enter Y coordinate. " << "<1-" << _board.getRows() << ">: ";
                 posY = _getch() - 48;
-                cout << posY;
+                cout << posY << endl;
 
                 if (posY < 1 || posY > _board.getRows()) {
-                    reportBadInput();
+                    _reportBadInput();
                 }
                 else {
-                    posY--;
-                    cout << endl;
+                    posY--; // board index starts at 0
                     break;
                 }
             } while (true);
@@ -142,13 +189,42 @@ void GameManager::play() {
             }
 
         } while (true);
-        if (_board.checkWin(posX, posY, currentPlayer.getSign())) {
+
+        // check win on every turn after minimum number of winning marks are placed
+        // For example, if marks to win is 3, it should start checking after the 3rd turn
+        // which turn == 2 because turn starts from zero.
+        if (turn >= _board.getWinMarker() - 1 && _board.checkWin(posX, posY, currentPlayer.getSign())) {
             cout << currentPlayer.getName() << " won!\n\nWell played!\n\n";
-            // break;
+            isTied = false;
+            break;
         }
+    }
+
+    if (isTied) {
+        cout << "Match tied! Well played!\n\n";
     }
 }
 
-void GameManager::reportBadInput() {
+void GameManager::_reportBadInput() {
     cout << "Unrecognized input!\n\n";
+}
+
+// checks if the name is already taken
+bool GameManager::_nameAvailable(string name, int index) {
+    for (int i = 0; i < index; i++) {
+        if (_players[i].getName() == name) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// checks if the sign is already taken
+bool GameManager::_signAvailable(char sign, int index) {
+    for (int i = 0; i < index; i++) {
+        if (_players[i].getSign() == sign) {
+            return false;
+        }
+    }
+    return true;
 }
