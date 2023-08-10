@@ -12,6 +12,7 @@ class GameManager {
 public:
     GameManager();
     void init();
+    void play();
 
 private:
     Board _board;
